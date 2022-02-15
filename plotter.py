@@ -61,10 +61,11 @@ class plotter:
 		for i in range(len(ytmMatrix[0,:])):
 			plt.plot(times,  ytmMatrix[:,i]*100, linestyle=':', linewidth=2.0, marker='o', label='Day '+str(i+1))
 		plt.xlabel('Time to maturity (years)', fontsize=15)
-		plt.xticks(times)
+		plt.xticks(times, fontsize=13)
+		plt.yticks(fontsize=13)
 		plt.ylabel('YTM', fontsize=15)
 		plt.title('5-year YTM curves from 10 days of data', fontsize=25)
-		plt.legend(loc=2, prop={'size': 16})
+		plt.legend(loc=2, prop={'size': 13})
 		plt.show()
 		
 		
@@ -74,10 +75,11 @@ class plotter:
 		for i in range(len(spotPoints)):
 			plt.plot(spotPoints[i,:,1], spotPoints[i,:,0]*100, linestyle=':', linewidth=2.0, marker='o', label='Day '+str(i+1))
 		plt.xlabel('Time to maturity, T (years)', fontsize=15)
-		plt.xticks(np.arange(0.0, 5.5, 0.5))
+		plt.xticks(np.arange(0.0, 5.5, 0.5), fontsize=13)
+		plt.yticks(fontsize=13)
 		plt.ylabel('Spot rate, r(T)', fontsize=15)
 		plt.title('5-year spot curves from 10 days of data', fontsize=25)
-		plt.legend(loc=2, prop={'size': 16})
+		plt.legend(loc=2, prop={'size': 13})
 		plt.show()
 	
 	#Using forwardPoints, generate a plot with the 1-year forward curve from each day superimposed on-top of each other.	
@@ -87,9 +89,10 @@ class plotter:
 			plt.plot(range(1,5), forwardPoints[i,:]*100, linestyle=':', linewidth=2.0, marker='o', label='Day '+str(i+1))
 		plt.xlabel('T (years)', fontsize=15)
 		plt.ylabel('1year-Tyear forward rate', fontsize=15)
-		plt.xticks(range(1,5))
+		plt.xticks(range(1,5), fontsize=13)
+		plt.yticks(fontsize=13)
 		plt.title('1-year forward curves from 10 days of data', fontsize=25)
-		plt.legend(loc=2, prop={'size': 16})
+		plt.legend(loc=2, prop={'size': 13})
 		plt.show()
 		
 		

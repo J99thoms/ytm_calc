@@ -78,7 +78,7 @@ spotMatrix = np.array(spt.getPointsArray())
 #Output the spot curve point-estimate matrix
 print('\nSpot curve point-estimate matrix:\n')
 print(spotMatrix*100)
-print('Each row corresonds to a bond.\nEach 2D matrix corresponds to a day of data.\nCol 1 = point-estimate for spot rate at time T, Col 2 = time T (in years)\n')
+print('Each row corresponds to a bond.\nEach 2D matrix corresponds to a day of data.\nCol 1 = point-estimate for spot rate at time T, Col 2 = time T (in years)\n')
 
 
 
@@ -96,7 +96,7 @@ forwardMatrix = np.array(frwd.getForwardArray())
 print('\n1-year - T-year forward curve point-estimate matrix:\n')
 print(forwardMatrix*100)
 print('Each row corresponds to a day of data.')
-print('Starting from T=2, each column corresonds to a year, T.\n')
+print('Starting from T=2, each column corresponds to a year, T.\n')
 
 
 
