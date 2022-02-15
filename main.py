@@ -54,8 +54,8 @@ ytmMatrix = np.array(YTMs)
 
 #Output the YTM matrix
 print('YTM matrix:\n')
-print(ytmMatrix)			
-print('Each row corresponds to a bond.\nEach column corresonds to a day of data.\n')
+print(ytmMatrix.T*100)			
+print('Each row corresponds to a day of data.\nEach column corresponds to a bond.\n')
 
 
 #Store the time to maturity of each bond (used when plotting the YTM curve)
@@ -77,7 +77,7 @@ spotMatrix = np.array(spt.getPointsArray())
 
 #Output the spot curve point-estimate matrix
 print('\nSpot curve point-estimate matrix:\n')
-print(spotMatrix)
+print(spotMatrix*100)
 print('Each row corresonds to a bond.\nEach 2D matrix corresponds to a day of data.\nCol 1 = point-estimate for spot rate at time T, Col 2 = time T (in years)\n')
 
 
@@ -94,7 +94,7 @@ forwardMatrix = np.array(frwd.getForwardArray())
 
 #Output the forward curve point-estimate matrix
 print('\n1-year - T-year forward curve point-estimate matrix:\n')
-print(forwardMatrix)
+print(forwardMatrix*100)
 print('Each row corresponds to a day of data.')
 print('Starting from T=2, each column corresonds to a year, T.\n')
 
