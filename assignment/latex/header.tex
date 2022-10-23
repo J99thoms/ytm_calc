@@ -1,0 +1,121 @@
+% PACKAGE IMPORTS
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+%\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{bm}
+%\usepackage[a4paper, margin=1.0in]{geometry}
+\usepackage{setspace}
+\usepackage{units}
+
+
+
+
+% Equality with ? above it
+\newcommand\qeq{\stackrel{\mathclap{\normalfont\mbox{?}}}{=}}
+
+%ring of integers of an algebraic number field K
+\newcommand{\Ok}{\mathcal{O}_K}
+
+% Shorter version of the \partial command
+\newcommand{\del}{\partial}
+
+% Produces ceil(arg) with the appropriate symbols
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+% Produces floor(arg) with the appropriate symbols
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+% Inner product
+\newcommand{\innerprod}[1]{\left\langle #1 \right\rangle}
+
+%discriminant
+\newcommand\disc{\text{disc}}
+
+%Reals, Naturals, Integers, Rationals, and Complex Numbers
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+
+%sin and cos and other trig with dynamically sized brackets
+\newcommand\sinb[1]{ \sin\!{\left( #1  \right)} }
+\newcommand\cosb[1]{ \cos\!{\left( #1  \right)} }
+\newcommand\tanb[1]{ \tan\!{\left( #1  \right)} }
+\newcommand\cotb[1]{ \cot\!{\left( #1  \right)} }
+\newcommand\secb[1]{ \sec\!{\left( #1  \right)} }
+\newcommand\cscb[1]{ \csc\!{\left( #1  \right)} }
+
+
+%sin and cos and other trig squared with dynamically sized brackets
+\newcommand\sinsq[1]{ \sin^2\!{\left( #1  \right)} }
+\newcommand\cossq[1]{ \cos^2\!{\left( #1  \right)} }
+\newcommand\tansq[1]{ \tan^2\!{\left( #1  \right)} }
+\newcommand\cotsq[1]{ \cot^2\!{\left( #1  \right)} }
+\newcommand\secsq[1]{ \sec^2\!{\left( #1  \right)} }
+\newcommand\cscsq[1]{ \csc^2\!{\left( #1  \right)} }
+
+%reciprocal
+\newcommand\rcp[1]{ \frac{1}{#1} }
+
+
+%inverse
+\newcommand\inv[1]{ {#1}^{-1}}
+
+%cube root
+\newcommand\cbrt[1]{\sqrt[3]{#1}}
+
+
+
+%underline
+\newcommand\undln[1]{ \underline{#1} }
+
+
+
+
+
+% Inserts custom title with assignment title, class, and name
+\newcommand{\atitle}[3]{
+	\begin{center}
+		\large
+		{\bf MAT#1 Assignment \##2}\\
+		\normalsize
+		{Jakob Thoms - 1007960912}\\
+		{#3}
+	\end{center}
+}
+
+
+
+%centered image
+\newcommand{\cpic}[2]{
+	\begin{center}
+		\includegraphics[scale=#2]{#1}
+	\end{center}
+}
+
+%image
+\newcommand{\pic}[2]{
+	\includegraphics[scale=#2]{#1}
+}
+
+
+
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother

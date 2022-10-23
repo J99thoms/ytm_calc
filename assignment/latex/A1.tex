@@ -1,0 +1,97 @@
+\documentclass{article}
+
+\input{header}
+
+%\usepackage[parfill]{parskip}
+\usepackage[a4paper, total={6.9in, 9.03in}]{geometry}
+\usepackage{tikz, bbm, mathrsfs, hyperref, centernot, enumerate, xcolor, lmodern, mathdots}
+	
+
+
+
+\title{MAT1856/APM466 Assignment 1}
+\author{Jakob Thoms, Student \#: 1007960912}
+\date{February 14, 2022}
+
+
+
+\begin{document}
+
+	\maketitle
+	
+	
+
+
+	
+	\section*{Fundamental Questions - 25 points}
+	
+	\begin{enumerate}
+		\item \hfill
+		\begin{enumerate}			
+			\item When a government prints more of their currency, they devalue their currency and therefore the money of everyone who has saved that currency, but when a government borrows money by issuing bonds and later uses taxes to repay it, they avoid devaluing their currency.
+			
+			\item If the short-term interest rates are rising faster than long-term interest rates, then the yield curve may begin to flatten. For example, if the U.S. Federal Reserve increases its short-term target then short-term interest rates would rise, whereas the long-term interest rates could remain stable.
+
+			
+			\item Quantitative easing is when a country's central bank purchases longer-term securities from the market in order to increase the domestic money supply in an attempt to spur economic activity by encouraging greater lending and investment. Due to the economic shutdown caused by the COVID-19 pandemic, the U.S. Federal Reserve has made heavy-use of quantitative easing since March of 2020.
+			
+		\end{enumerate}
+		\item During the boot-strapping process, the first bond used must have a timeToMaturity of less than 6 months. At each stage of the boot-strapping process, the timeToMaturity of the next bond used can be at most 6 months more than the timeToMaturity of the previous bond used (otherwise the system of equations corresponding to the discounted cashflow equation will have more than one unknown yield rate). With this in mind, the main objective when selecting bonds for boot-strapping is to maximize the timeToMaturity of each bond subject to the above constraints. This will allow us to construct a 0-5 year spot curve while using as few bonds as possible. In the event that two bonds have the same exact timeToMaturity, then the tie-breaker will be to select the bond that has the most recent issueDate.\\
+		In addition to the provided naming convention for referring to bonds, I will also give the last 4 digits of each bond's ISIN to avoid any ambiguities.  Using the above strategy, the bonds selected for boot-strapping will be CAN 2.75 May 22 (ZU15), CAN 0.25 Oct 22 (L369), CAN 0.25 Apr 23 (L856), CAN 0.50 OCT 23 (M763), CAN 0.25 Mar 24 (L690), CAN 0.75 Sep 24 (M508), CAN 1.25 Feb 25 (K528), CAN 0.50 Aug 25 (K940), CAN 0.25 Feb 25 (L518), CAN 1.00 Aug 26 (L930), and CAN 1.25 Feb 27 (M847).
+		
+		
+		
+		\item Let $X_1, \dots, X_n$ be random variables. Let $Y = \sum_i \alpha_i X_i$ be a linear combination of the $X_i$'s. Then the variance of $Y$ depends on the covariances of the $X_i$'s as well as the weights of the coefficients $\alpha_i$. Let $\vec{v_1}, \dots, \vec{v}_n$ and $\lambda_1, \dots, \lambda_n$ be the eigenvectors and corresponding eigenvalues of the covariance matrix of the $X_i$, and assume that the eigenvectors are all unit-length and that $\lambda_1 \geq \cdots \geq \lambda_n$. Then it can be shown that if $\vec{v_1} = \begin{bmatrix}
+			a_1 & \cdots & a_n
+		\end{bmatrix}$, then setting $\alpha_i = a_i$ minimizes the variance of $Y$ subject to the weights $\alpha_i$ satisfying $\sum_i \alpha_i^2 = 1$. Further, by setting $\alpha_i=a_i$ the variance of $Y$ will be $\lambda_1$. In other words, when plotting the $X_i$ in $n$D space, $\vec{v}_1$ is  the direction of greatest variance of the $X_i$, and $\lambda_1$ is this variance. Similarly, $\vec{v}_2$ is the direction of 2nd greatest variance of the $X_i$, and $\lambda_2$ is this variance. These directions will be orthogonal. 
+	
+		Now suppose that the $X_i$ are stochastic processes for which each process represents a unique point along a stochastic curve. Then the eigenvectors of the covariance matrix will correspond to points along the curve which tend to move in the same/opposite direction. Given an eigenvector, two coordinates with large magnitudes and the same (opposite) parity will correspond to points on the stochastic curve which tend to move in the same (opposite) direction. The eigenvalue of an eigenvector corresponds to how much of the total variance of the $X_i$ is captured by this eigenvector. 
+		
+		
+		
+	\end{enumerate}
+	
+	
+	
+	\section*{Empirical Questions - 75 points} 
+	
+	\begin{enumerate}
+		\setcounter{enumi}{3} 
+		\item For all plots in Q4, I used linear interpolation.\hfill
+		\begin{enumerate}
+			\item  YTM for each of my selected bonds on each day of data:\\ \pic{ytmMatrix.png}{0.55}\pic{ytmCurve.png}{0.55}	In the above matrix, each row corresponds to a day of data and each column corresponds to a bond.\\
+			
+			
+			\item Use CAN 2.75 May 22 (ZU15), which matures in less than 6 months, to get the first point-estimate for the spot curve. Interpolate this point-estimate to estimate the spot curve for up to 6 months. Use the spot curve constructed so far in the DCF equation of CAN 0.25 Oct 22 (L369). This bond's final cashflow occurs in less than a year but more than 6 months, and we can use it to get a second point-estimate for the spot curve. Interpolate this point-estimate to estimate the spot curve for up to 1 year. Continuing this process for each of the 11 bonds will result in an approximation of the spot curve for up to 5 years. \\
+			 \pic{spotCurve.png}{0.5}
+			
+			
+			\item The 1yr-$T$yr forward rate for $T=1,2,3,4$ can easily be obtained using the spot curve obtained in Q4(b). Simply use the spot curve to price zero coupon bonds and then apply the definition of the forward rate.\\
+			\pic{forwardCurve.png}{0.5}
+			
+		\end{enumerate}
+		\item Below is the daily log-returns of YTM for 5 of my 11 bonds (on the left), as well as the corresponding covariance matrix (on the right):\\ \pic{ytmLogReturns.png}{0.6}\pic{ytmCovariance.png}{0.6}\\ 	In the above log-return matrix, each row corresponds to a day of data and each column corresponds to a bond. In the above covariance matrix, starting from $i=1$, row/column $i$ corresponds to a bond that has a timeToMaturity of approximately $i$ years.\\
+		
+		Below is the daily log-returns of the 1yr-$T$yr forward rates for $T=1,2,3,4$, (on the left), as well as the corresponding covariance matrix (on the right):\\ \pic{forwardLogReturns.png}{0.6}\pic{forwardCovariance.png}{0.6}\\ 	In the above log-return matrix, each row corresponds to a day of data and each column corresponds to a year. In the above covariance matrix, starting from $i=1$, row/column $i$ corresponds to the 1yr-$i$yr forward rate.
+		
+		
+		
+		\item Eigenvalues and eigenvectors of the YTM log-return covariance matrix:\\ \pic{ytmEigen.png}{0.6}\\
+		Eigenvalues and eigenvectors of the 1yr-$T$yr forward rate log-return covariance matrix:\\ \pic{forwardEigen.png}{0.6}\\
+		Notice that for both the YTM covariance matrix and the forward rate covariance matrix the first eigenvalue is significantly larger than the rest. Further, the entries of the associated eigenvector are all approximately the same magnitude and all of the same parity. This implies that the bulk of the day-to-day variance in both the YTM curve and the forward curve is caused by the all the points on the curve moving up/down at the same time. Inspecting the above plots reveals that this is indeed the case, as one can see that the curves remain more-or-less the same shape for each day of data, but shift up/down from day-to-day.
+	\end{enumerate}
+	
+	\newpage
+	\section*{References and GitHub Link to Code}
+	References:
+	\begin{enumerate}
+		\item Dr. Luis Seco's Lecture Slides
+		\item APM466 Textbook - Dr. Luis Seco
+	\end{enumerate}
+	\href{https://github.com/J99thoms/M1856_Assignment1}{GitHub Repository} (https://github.com/J99thoms/M1856\_Assignment1)
+	
+
+
+		
+\end{document}
+
