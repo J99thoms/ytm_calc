@@ -58,39 +58,103 @@ class bond:
 		
 		
 	
-	#Given the current date, return the date of the most recent coupon payment for this bond
-	def prevCouponDate(self, currentDate):
-		couponDate = self.maturity
-		while couponDate > currentDate:
-			couponDate = bond.decrementCoupon(couponDate)
-		return couponDate
+	def lastCouponDate(self, current_date):
+		"""
+		Given the current date, determine the date of the last (i.e. most recent) 
+		coupon payment of a bond.
+
+		Parameters
+        ----------
+        current_date : datetime
+            The current date
+
+        Returns
+        -------
+        datetime
+           The date of the most recent coupon payment of the bond		
+		"""
+		date = self.maturity
+		while date > current_date:
+			date = bond.decrementCoupon(date)
+		return date
 		
 		
-	#Given the current date, return the date of the next upcoming coupon payment for this bond
-	def nextCouponDate(self, currentDate):
-		return bond.incrementCoupon(self.prevCouponDate(currentDate))
+	def nextCouponDate(self, current_date):
+		"""
+		Given the current date, determine the date of the next 
+		coupon payment of a bond.
+
+		Parameters
+        ----------
+        current_date : datetime
+            The current date
+
+        Returns
+        -------
+        datetime
+           The date of the next coupon payment of the bond		
+		"""
+		return bond.incrementCoupon(self.lastCouponDate(current_date))
 		
-	
-	#Given the current date, return the number of days since the most recent coupon payment for this bond
-	def daysSinceCoupon(self, currentDate):
-		couponDate = self.prevCouponDate(currentDate)
-		days = (currentDate - couponDate).days
+
+	def daysSinceCoupon(self, current_date):
+		"""
+		Given the current date, determine the number of days since
+		the most recent coupon payment of a bond.
+
+		Parameters
+        ----------
+        current_date : datetime
+            The current date
+
+        Returns
+        -------
+        int
+           The number of days since the most recent coupon payment of the bond	
+		"""
+		couponDate = self.lastCouponDate(current_date)
+		days = (current_date - couponDate).days
 		return days
 				
 				
-	#Given the current date, return the time (in years) until next upcoming coupon payment for this bond
-	def timeToNextCoupon(self, currentDate):
-		couponDate = self.nextCouponDate(currentDate)
-		days = (couponDate - currentDate).days
-		time = days/365
+	def timeToNextCoupon(self, current_date):
+		"""
+		Given the current date, return the time in years until
+		the next coupon payment of a bond.
+
+		Parameters
+        ----------
+        current_date : datetime
+            The current date
+
+        Returns
+        -------
+        float
+           The time in years until the next coupon payment of the bond
+		"""
+		couponDate = self.nextCouponDate(current_date)
+		days = (couponDate - current_date).days
+		time = days / 365
 		return time
 		
 		
-	#Given the current date, return the time (in years) until the maturity date of this bond
 	def timeToMaturity(self, currentDate):
+		"""
+		Given the current date, return the time in years until
+		the maturity date of a bond.
+
+		Parameters
+        ----------
+        current_date : datetime
+            The current date
+
+        Returns
+        -------
+        float
+           The time in years until the maturity date of the bond
+		"""
 		days = (self.maturity - currentDate).days
 		time = days/365
-		#print(self.maturity)
 		return time
 		
 		
@@ -146,24 +210,20 @@ class bond:
 		
 	
 	
-	#Assuming the bond object has a list of clean prices from consecutive business days,
+	# Assuming the bond object has a list of clean prices from consecutive business days,
 	# and given the date of the first clean price in the list,
 	# calculate the bond's YTM on each day.
-	def calcYTMs(self, startDate):
-	
-		#Setup loop variables
-		i = 0
-		date = startDate
+	def calcYTMs(self, start_date):
+		date = start_date
+
+		# Calc YTMs
 		YTMs = []
-		prices = self.clean_prices
-		
-		#Calc YTMs
-		while i < len(prices):
-			YTMs.append(self.calcYTM(date, prices[i]))
-			if (i%5)==4:
-				date = date + timedelta(days=2)		#If the previous date was a Friday, add two extra days to the date
+		for i, price in enumerate(self.clean_prices):
+			YTMs.append(self.calcYTM(date, price))
 			date = date + timedelta(days=1)
-			i+=1			
+			if (i%5)==4:
+				date = date + timedelta(days=2)		# Deal with weekends
+
 		return YTMs
 				
 	
