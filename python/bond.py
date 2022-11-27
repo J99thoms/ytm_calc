@@ -2,50 +2,31 @@ from datetime import datetime, timedelta
 import math
 
 
+"""
+A bond object is used to store information about a bond.
 
-#A bond object is used to store information about a bond.
-#
-#A bond object has an issue date, a maturity date, and a coupon rate.
-#
-#A bond object can also store a list of clean price(s).
-#	This list of clean price(s) is assumed to correspond to consecutive business day(s).
+A bond object has an issue date, a maturity date, and a coupon rate.
 
+A bond object can also store a list of clean price(s).
+	This list of clean price(s) is assumed to correspond to consecutive business day(s).
+"""
 
 class bond:
 	
-	#Constructor
-	def __init__(self, issueDate, maturityDate, coupon, cleanPrices):
-		self.issue = issueDate
-		self.maturity = maturityDate
+	# Constructor
+	def __init__(self, issue_date, maturity, coupon, clean_prices):
+		self.issue_date = issue_date
+		self.maturity = maturity
 		self.coupon = coupon
-		self.cleanPrices = cleanPrices
+		self.clean_prices = clean_prices	# Clean prices should correspond to consecutive business days.
 		
 		
-	#toString method (for debugging)
+	# For debugging
 	def __str__(self):
-         return "issueDate: "+str(self.getIssue())+"\n maturityDate: "+str(self.getMaturity())+"\n Coupon: "+str(self.getCoupon())+"\n cleanPrices: "+str(self.getCleanPrices())
-		
-		
-	
-	#Getter methods:
-	
-	def getIssue(self):
-		return self.issue
-		
-	def getMaturity(self):
-		return self.maturity
-		
-	def getCoupon(self):
-		return self.coupon
-	
-	def getCleanPrices(self):
-		return self.cleanPrices
-		
-	def getCleanPrice(self, index):
-		return self.getCleanPrices()[index]
-		
-		
-		
+         return (f"issue date: {self.issue_date} \n" +
+		 	f"maturity date: {self.maturity} \n" +
+			f"coupon: {self.coupon} \n \n" +
+			f"clean prices: {self.clean_prices}")
 		
 		
 		
@@ -79,7 +60,7 @@ class bond:
 	
 	#Given the current date, return the date of the most recent coupon payment for this bond
 	def prevCouponDate(self, currentDate):
-		couponDate = self.getMaturity()
+		couponDate = self.maturity
 		while couponDate > currentDate:
 			couponDate = bond.decrementCoupon(couponDate)
 		return couponDate
@@ -107,9 +88,9 @@ class bond:
 		
 	#Given the current date, return the time (in years) until the maturity date of this bond
 	def timeToMaturity(self, currentDate):
-		days = (self.getMaturity() - currentDate).days
+		days = (self.maturity - currentDate).days
 		time = days/365
-		#print(self.getMaturity())
+		#print(self.maturity)
 		return time
 		
 		
@@ -120,11 +101,11 @@ class bond:
 	
 		#Calculate the dirty price
 		n = self.daysSinceCoupon(cleanDate)
-		accruedInterest = n/365*self.getCoupon()
+		accruedInterest = n/365*self.coupon
 		dirtyPrice = cleanPrice + accruedInterest
 		
 		#Setup cashflows
-		couponFlow = self.getCoupon()/2
+		couponFlow = self.coupon/2
 		notional = 100
 		
 		#Calculate time until cashflows
@@ -143,7 +124,7 @@ class bond:
 			deriv = 0
 			
 			#Add up coupon cashflows
-			while date <= self.getMaturity():
+			while date <= self.maturity:
 				DCF += couponFlow*math.exp(-r*timeToCoupon)
 				deriv += timeToCoupon*couponFlow*math.exp(-r*timeToCoupon)
 				
@@ -174,7 +155,7 @@ class bond:
 		i = 0
 		date = startDate
 		YTMs = []
-		prices = self.getCleanPrices()
+		prices = self.clean_prices
 		
 		#Calc YTMs
 		while i < len(prices):
