@@ -8,12 +8,15 @@ from bond import bond
 from spotCurve import spotCurve
 from forwardCurve import forwardCurve
 from plotter import plotter
-from logReturner import logReturner as logr
+from util import calcLogArray
 
 
 
 # Load the bond data
-bonds_df = pd.read_csv('data/bonds.csv')
+df = pd.read_csv('data/bonds.csv').set_index('ISIN')
+clean_prices_df = df.iloc[:, 5:]
+bonds_df = df[['coupon', 'issue_date', 'maturity_date']]
+
 bonds_df['issue_date'] = bonds_df['issue_date'].apply(
 	lambda x: datetime.strptime(x, '%m/%d/%Y')
 )
@@ -23,40 +26,35 @@ bonds_df['maturity_date'] = bonds_df['maturity_date'].apply(
 
 # Read in the data for the 11 selected bonds, storing each as a bond object in the list 'bonds'
 bonds = []
-for i in range(11):
-	issue_date = bonds_df.iloc[i, 2]
-	maturity = bonds_df.iloc[i, 3]
-	coupon = bonds_df.iloc[i, 0]
-	clean_prices = bonds_df.iloc[i, 5:15].tolist()
-	newBond = bond(issue_date, maturity, coupon, clean_prices)
-	bonds.append(newBond)
+for i in bonds_df.index:
+	issue_date = bonds_df.loc[i, 'issue_date']
+	maturity_date = bonds_df.loc[i, 'maturity_date']
+	coupon = bonds_df.loc[i, 'coupon']
+	clean_prices = clean_prices_df.loc[i, :].tolist()
+	bonds.append(bond(issue_date, maturity_date, coupon, clean_prices))
 	
-start_day = datetime(2022, 1, 10)	#Date that data collection began = Jan. 10, 2022
-
+start_day = datetime(2022, 1, 10)	# Date that data collection began = Jan. 10, 2022
 
 
 # Calculations for Q4(a):
 print('\nQ4(a):\n')
 
-#For each bond, calculate its YTM for each day of data,
-#	and then store all the YTMs in a matrix.
+# For each bond, calculate its YTM for each day of data,
+# and then store all the YTMs in a matrix.
 YTMs = []	
 for i in range(len(bonds)):
 	YTMs.append(bonds[i].calcYTMs(start_day))
 ytmMatrix = np.array(YTMs)		
 
-#Output the YTM matrix
+# Output the YTM matrix
 print('YTM matrix:\n')
 print(ytmMatrix.T*100)			
 print('Each row corresponds to a day of data.\nEach column corresponds to a bond.\n')
 
-
-#Store the time to maturity of each bond (used when plotting the YTM curve)
+# Store the time to maturity of each bond (used when plotting the YTM curve)
 times = []
 for i in range(len(bonds)):
 	times.append(bonds[i].timeToMaturity(start_day))
-
-
 
 
 #Calculations for Q4(b):
@@ -71,8 +69,6 @@ spotMatrix = np.array(spt.getPointsArray())
 print('\nSpot curve point-estimate matrix:\n')
 print(spotMatrix*100)
 print('Each row corresponds to a bond.\nEach 2D matrix corresponds to a day of data.\nCol 1 = point-estimate for spot rate at time T, Col 2 = time T (in years)\n')
-
-
 
 
 #Calculations for Q4(c):
@@ -90,8 +86,6 @@ print('Each row corresponds to a day of data.')
 print('Starting from T=2, each column corresponds to a year, T.\n')
 
 
-
-
 #For quick debugging of the plotter:
 
 #np.save('ytmMatrix', ytmMatrix)	
@@ -105,8 +99,6 @@ print('Starting from T=2, each column corresponds to a year, T.\n')
 #forwardMatrix = np.load('forwardPoints.npy')
 
 
-
-
 #Plots for Q4:
 
 #Generate plots for the YTM curve, spot curve, and 1-year forward curve, with each day of data superimposed on-top of each other
@@ -114,12 +106,6 @@ pltt = plotter(ytmMatrix, times, spotMatrix, forwardMatrix)
 pltt.buildYTMPlot()
 pltt.buildSpotPlot()
 pltt.buildForwardPlot()
-
-
-
-
-
-
 
 
 
@@ -135,7 +121,7 @@ print(ytmData)
 print('Each column corresponds to a bond.\nEach row corresonds to a day of data.')
 print('With the leftmost column being column #1, the bond corresonding to column i matures in approximately i years.\n')
 
-ytmLogReturns = logr.calcLogArray(ytmData)	#Calculate the daily log-returns of yield for bonds with maturities in approximately 1, 2, 3, 4, and 5 years
+ytmLogReturns = calcLogArray(ytmData)	#Calculate the daily log-returns of yield for bonds with maturities in approximately 1, 2, 3, 4, and 5 years
 
 #Output the YTM log-return data
 print('\nYTM daily log-return matrix:\n')
@@ -160,7 +146,7 @@ print('Each row corresponds to a day of data.')
 print('Starting from T=2, each column corresonds to a year, T.\n')
 
 
-forwardLogReturns = logr.calcLogArray(forwardMatrix)	#Calculate the daily log-returns of 1-year forward rate for 1yr-1yr, 1yr-2yr, 1yr-3yr, and 1yr-4yr
+forwardLogReturns = calcLogArray(forwardMatrix)	#Calculate the daily log-returns of 1-year forward rate for 1yr-1yr, 1yr-2yr, 1yr-3yr, and 1yr-4yr
 
 #Output the 1-year forward rate log-return data
 print('\n1-year - T-year forward rate daily log-return matrix:\n')
@@ -174,11 +160,6 @@ forwardCov = np.cov(forwardLogReturns, rowvar=False)	#Calculate the covariance m
 print('\n1-year - T-year forward rate daily log-return covariance matrix: \n')
 print(forwardCov)
 print('Starting from i=1, column/row i corresponds the 1-year - (i+1)-year forward rate.\n')
-
-
-
-
-
 
 
 
@@ -198,10 +179,5 @@ forwardEigVals, forwardEigVecs = LA.eig(forwardCov)
 print('\n\n1-year - T-year forward rate daily log-return covariance matrix eigenvalues and eigenvectors:')
 for i in range(len(forwardEigVals)):
 	print('\neigenvalue: ' + str(forwardEigVals[i]) + '\neigenvector: ' + str(forwardEigVecs[:,i]))
-
-
-
-
-
 
 
