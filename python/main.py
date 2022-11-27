@@ -1,8 +1,8 @@
 from datetime import datetime
 import numpy as np
+import pandas as pd
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
-import xlrd
 
 
 from bond import bond
@@ -14,20 +14,19 @@ from logReturner import logReturner as logr
 
 
 
-#Open the excel spreadsheet with the bond data
-loc = ("C:/Users/Jakob/Desktop/School Materials/Toronto/Winter 2022/MAT1856/Assignments/A1/bonds.xlsx")
-wb = xlrd.open_workbook(loc)
-sheet = wb.sheet_by_index(0)
+# Load the bond data
+bonds_df = pd.read_csv('data/bonds.csv')
 
-#Read in the data for the 11 selected bonds, storing each as a bond object in the list 'bonds'
+# Read in the data for the 11 selected bonds, storing each as a bond object in the list 'bonds'
 bonds = []
 for i in range(11):
-	issueDate = datetime.strptime(sheet.cell_value(i+1, 2), '%m/%d/%Y')
-	maturityDate = datetime.strptime(sheet.cell_value(i+1, 3), '%m/%d/%Y')
-	coupon = sheet.cell_value(i+1, 0)*100
+	print(bonds_df.iloc[i, 2])
+	issueDate = datetime.strptime(bonds_df.iloc[i, 2], '%m/%d/%Y')
+	maturityDate = datetime.strptime(bonds_df.iloc[i, 3], '%m/%d/%Y')
+	coupon = bonds_df.iloc[i, 0]
 	cleanPrices = []
 	for j in range(5, 15):
-		cleanPrices.append(sheet.cell_value(i+1, j))
+		cleanPrices.append(bonds_df.iloc[i, j])
 	newBond = bond(issueDate, maturityDate, coupon, cleanPrices)
 	bonds.append(newBond)
 	

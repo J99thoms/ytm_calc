@@ -85,7 +85,7 @@ class spotCurve:
 		numPoints = len(self.getBonds())	#One point-estimate is gained from each bond
 		
 		#Loop through the cleanPrices (assumed to be consecutive business days)
-		for i in range(len(self.getBonds()[0].getCleanPrices())):	#Assumes that each bond in self.bonds has the same number of cleanPrices
+		for i in range(len(self.getBonds()[0].clean_prices)):	#Assumes that each bond in self.bonds has the same number of cleanPrices
 			self.calcFirstPoint(i)	
 			while len(self.getPointsArray()[-1]) < numPoints:
 				self.calcNextPoint(i)
@@ -101,12 +101,12 @@ class spotCurve:
 		
 		#Calc dirty price
 		n = firstBond.daysSinceCoupon(currentDate)
-		accruedInterest = n/365*firstBond.getCoupon()
-		cleanPrice = firstBond.getCleanPrice(day)
+		accruedInterest = n/365*firstBond.coupon
+		cleanPrice = firstBond.clean_prices[day]
 		dirtyPrice = cleanPrice + accruedInterest
 		
 		#Setup cashflows
-		couponFlow = firstBond.getCoupon()/2
+		couponFlow = firstBond.coupon/2
 		finalFlow = 100 + couponFlow
 		
 		#Calc time until cashflows
@@ -127,12 +127,12 @@ class spotCurve:
 		
 		#Calc dirty price
 		n = nextBond.daysSinceCoupon(currentDate)
-		accuredInterest = n/365*nextBond.getCoupon()
-		cleanPrice = nextBond.getCleanPrice(day)
+		accuredInterest = n/365*nextBond.coupon
+		cleanPrice = nextBond.clean_prices[day]
 		dirtyPrice = cleanPrice + accuredInterest
 		
 		#Setup cashflows
-		couponFlow = nextBond.getCoupon()/2
+		couponFlow = nextBond.coupon/2
 		finalFlow = 100 + couponFlow
 		
 		#Calc time until cashflows
@@ -146,7 +146,7 @@ class spotCurve:
 		j=1
 			
 		#Sum up coupon cash flows (using interpolated yield values from boot-strapping)
-		while loopDate < nextBond.getMaturity():
+		while loopDate < nextBond.maturity:
 		
 			#Get nearby spot curve point-estimates (for linear interpolation)
 			rPrev = 0
