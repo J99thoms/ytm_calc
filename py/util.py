@@ -12,8 +12,7 @@ def calcLogArray(data):
         Returns
         -------
         numpy.ndarray
-            A new image where the pixels values represent the energy
-            of the corresponding pixel in the original image
+           array of log-returns
         """
 		log_data = data[0:-1,:]
 		for j in range(len(data) - 1):
