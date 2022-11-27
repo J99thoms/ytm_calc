@@ -1,9 +1,8 @@
-from datetime import datetime
 import numpy as np
 import pandas as pd
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
-
+from datetime import datetime
 
 from bond import bond
 from spotCurve import spotCurve
@@ -13,42 +12,37 @@ from logReturner import logReturner as logr
 
 
 
-
 # Load the bond data
 bonds_df = pd.read_csv('data/bonds.csv')
+bonds_df['issue_date'] = bonds_df['issue_date'].apply(
+	lambda x: datetime.strptime(x, '%m/%d/%Y')
+)
+bonds_df['maturity_date'] = bonds_df['maturity_date'].apply(
+	lambda x: datetime.strptime(x, '%m/%d/%Y')
+)
 
 # Read in the data for the 11 selected bonds, storing each as a bond object in the list 'bonds'
 bonds = []
 for i in range(11):
-	print(bonds_df.iloc[i, 2])
-	issueDate = datetime.strptime(bonds_df.iloc[i, 2], '%m/%d/%Y')
-	maturityDate = datetime.strptime(bonds_df.iloc[i, 3], '%m/%d/%Y')
+	issue_date = bonds_df.iloc[i, 2]
+	maturity = bonds_df.iloc[i, 3]
 	coupon = bonds_df.iloc[i, 0]
-	cleanPrices = []
-	for j in range(5, 15):
-		cleanPrices.append(bonds_df.iloc[i, j])
-	newBond = bond(issueDate, maturityDate, coupon, cleanPrices)
+	clean_prices = bonds_df.iloc[i, 5:15].tolist()
+	newBond = bond(issue_date, maturity, coupon, clean_prices)
 	bonds.append(newBond)
 	
-	
-
-startDay = datetime(2022, 1, 10)	#Date that data collection began = Jan. 10, 2022
+start_day = datetime(2022, 1, 10)	#Date that data collection began = Jan. 10, 2022
 
 
 
-
-
-
-
-
-#Calculations for Q4(a):
+# Calculations for Q4(a):
 print('\nQ4(a):\n')
 
 #For each bond, calculate its YTM for each day of data,
 #	and then store all the YTMs in a matrix.
 YTMs = []	
 for i in range(len(bonds)):
-	YTMs.append(bonds[i].calcYTMs(startDay))
+	YTMs.append(bonds[i].calcYTMs(start_day))
 ytmMatrix = np.array(YTMs)		
 
 #Output the YTM matrix
@@ -60,7 +54,7 @@ print('Each row corresponds to a day of data.\nEach column corresponds to a bond
 #Store the time to maturity of each bond (used when plotting the YTM curve)
 times = []
 for i in range(len(bonds)):
-	times.append(bonds[i].timeToMaturity(startDay))
+	times.append(bonds[i].timeToMaturity(start_day))
 
 
 
@@ -69,7 +63,7 @@ for i in range(len(bonds)):
 print('\n\n\nQ4(b):\n')
 
 #Generate a 3D matrix of point-estimates for spot curves for each day of data
-spt = spotCurve(bonds, startDay)
+spt = spotCurve(bonds, start_day)
 spt.calcPoints()
 spotMatrix = np.array(spt.getPointsArray())
 
